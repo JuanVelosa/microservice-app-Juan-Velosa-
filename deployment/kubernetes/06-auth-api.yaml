@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-api
+  namespace: microservices
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: auth-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-api
+  namespace: microservices
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-api
+  template:
+    metadata:
+      labels:
+        app: auth-api
+    spec:
+      containers:
+      - name: auth-api
+        image: auth-api:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AUTH_API_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: AUTH_API_PORT
+        - name: USERS_API_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: USERS_API_ADDRESS
+        - name: JWT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: JWT_SECRET
+        - name: ZIPKIN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: ZIPKIN_URL
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /version
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /version
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5

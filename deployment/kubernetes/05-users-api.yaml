@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-api
+  namespace: microservices
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8083
+    targetPort: 8083
+  selector:
+    app: users-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api
+  namespace: microservices
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: users-api
+  template:
+    metadata:
+      labels:
+        app: users-api
+    spec:
+      containers:
+      - name: users-api
+        image: users-api:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8083
+        env:
+        - name: ZIPKIN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: ZIPKIN_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "300m"

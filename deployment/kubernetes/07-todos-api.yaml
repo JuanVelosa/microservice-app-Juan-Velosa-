@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todos-api
+  namespace: microservices
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8082
+    targetPort: 8082
+  selector:
+    app: todos-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todos-api
+  namespace: microservices
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todos-api
+  template:
+    metadata:
+      labels:
+        app: todos-api
+    spec:
+      containers:
+      - name: todos-api
+        image: todos-api:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+        env:
+        - name: TODO_API_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: TODO_API_PORT
+        - name: JWT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: JWT_SECRET
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_PORT
+        - name: REDIS_CHANNEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_CHANNEL
+        - name: ZIPKIN_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: ZIPKIN_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "300m"
