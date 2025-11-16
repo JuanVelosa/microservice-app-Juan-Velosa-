@@ -37,6 +37,7 @@ microservice-app-Juan-Velosa/
 
 # Como inicializar todo los servicios
 ```bash
+Minikube start
 cd /Users/juanmanuelvelosavalencia/Documents/microservice-app-Juan-Velosa-
 eval $(minikube docker-env)
 docker build -t frontend services/frontend/
@@ -64,6 +65,7 @@ kubectl port-forward -n microservices svc/prometheus 9090:9090 &
 ```bash
 pkill -f "kubectl port-forward"
 kubectl delete namespace microservices
+minikube stop
 ```
 
 ---
