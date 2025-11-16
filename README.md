@@ -60,7 +60,7 @@ kubectl patch configmap grafana-dashboards-provider -n microservices --type merg
 ```bash
 # Port forwards
 
-ubectl wait --for=condition=ready pod --all -n microservices --timeout=300s
+kubectl wait --for=condition=ready pod --all -n microservices --timeout=300s
 kubectl rollout restart deployment todos-api -n microservices
 kubectl rollout status deployment todos-api -n microservices
  
@@ -68,7 +68,7 @@ kubectl port-forward -n microservices svc/frontend 8080:8081 &
 kubectl port-forward -n microservices svc/grafana 3000:3000 &
 kubectl port-forward -n microservices svc/prometheus 9090:9090 &
 
-k
+
 ```
 
 # Como apagar todo los servicios
