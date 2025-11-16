@@ -37,8 +37,9 @@ microservice-app-Juan-Velosa/
 
 # Como inicializar todo los servicios
 ```bash
-Minikube start
+minikube start
 cd /Users/juanmanuelvelosavalencia/Documents/microservice-app-Juan-Velosa-
+
 eval $(minikube docker-env)
 docker build -t frontend services/frontend/
 docker build -t auth-api services/auth-api/
@@ -48,8 +49,10 @@ docker build -t log-message-processor services/log-processor/
 ```
 
 ```bash
-
+#Deploy
 kubectl apply -f deployment/kubernetes/
+
+#Arrglear el path del dashboard
 kubectl patch configmap grafana-dashboards-provider -n microservices --type merge -p '{"data":{"dashboards.yaml":"apiVersion: 1\nproviders:\n- name: default\n  orgId: 1\n  folder: \"\"\n  type: file\n  disableDeletion: false\n  editable: true\n  options:\n    path: /etc/grafana/provisioning/dashboards"}}'
 
 ```
@@ -72,7 +75,6 @@ k
 
 ```bash
 pkill -f "kubectl port-forward"
-kubectl delete namespace microservices
 minikube stop
 ```
 
