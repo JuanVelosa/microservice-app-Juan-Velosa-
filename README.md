@@ -34,6 +34,40 @@ microservice-app-Juan-Velosa/
 
 ---
 
+
+# Como inicializar todo los servicios
+```bash
+cd /Users/juanmanuelvelosavalencia/Documents/microservice-app-Juan-Velosa-
+eval $(minikube docker-env)
+docker build -t frontend services/frontend/
+docker build -t auth-api services/auth-api/
+docker build -t todos-api services/todos-api/
+docker build -t users-api services/users-api/
+docker build -t log-message-processor services/log-processor/
+```
+
+```bash
+
+kubectl apply -f deployment/kubernetes/
+
+```
+
+```bash
+# Port forwards
+kubectl port-forward -n microservices svc/frontend 8080:8081 &
+kubectl port-forward -n microservices svc/grafana 3000:3000 &
+kubectl port-forward -n microservices svc/prometheus 9090:9090 &
+```
+
+# Como apagar todo los servicios
+
+```bash
+pkill -f "kubectl port-forward"
+kubectl delete namespace microservices
+```
+
+---
+
 # Guía de Verificación Detallada - Taller Plataformas 2
 
 Esta guía demuestra paso a paso el cumplimiento de todos los conceptos de Kubernetes solicitados en el taller.
