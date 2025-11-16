@@ -75,7 +75,7 @@ data:
 
       - job_name: 'redis'
         static_configs:
-          - targets: ['redis:6379']
+          - targets: ['redis:9121']
 
 ---
 apiVersion: v1
