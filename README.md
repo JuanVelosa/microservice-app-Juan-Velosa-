@@ -50,6 +50,7 @@ docker build -t log-message-processor services/log-processor/
 ```bash
 
 kubectl apply -f deployment/kubernetes/
+kubectl patch configmap grafana-dashboards-provider -n microservices --type merge -p '{"data":{"dashboards.yaml":"apiVersion: 1\nproviders:\n- name: default\n  orgId: 1\n  folder: \"\"\n  type: file\n  disableDeletion: false\n  editable: true\n  options:\n    path: /etc/grafana/provisioning/dashboards"}}'
 
 ```
 
